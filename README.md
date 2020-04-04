@@ -1,2 +1,2 @@
-# cs_4080_malbolge
-Team Malbolge project for CS 4080.
+
+Team Pointless project for CS 4080.
