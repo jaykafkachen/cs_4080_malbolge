@@ -77,8 +77,8 @@ class Wallet:
 		exrFrom = self.exchangeRate[currFrom]
 		exrTo = self.exchangeRate[currTo]
 		
-		converted = amt*exrTo/exrFrom
-		return converted
+		amt = amt*exrTo/exrFrom
+		return amt
 
 	def convertCurrency(self, currencyFrom, currTo):
 		if currencyFrom.currencyType not in self.exchangeRate:
@@ -106,17 +106,31 @@ class Wallet:
 	def printWallet(self):
 		print(self.balance)
 
+
 #testing values below
 
-#for pass by value 
+#for pass by "value" (immutable types) 
 bal1 = { "USD":20.0, "JPY":70023, "CNY":88888, "GBP":99.02 }
 
-#for pass by obj ref 
+#for pass by obj ref (mutable object types)
 c1 = Currency(20.0, "USD")
 c2 = Currency(70023, "JPY")
 c3 = Currency(88888, "CNY")
 c4 = Currency(99.02, "GBP")
 bal2 = { c1:c1.amount, c2:c2.amount, c3:c3.amount, c4:c4.amount }
 
-w = Wallet(bal1)
-w.userMenu()
+w1 = Wallet(bal1)
+w2 = Wallet(bal2)
+
+amount = 100.25
+print("Testing immutable type (float)")
+print("Converting USD to JPY:\t"+str(amount))
+print("Converted to JPY:\t\t"+ str(w1.convert(amount, "USD", "JPY")))
+print("Original Amount:\t\t" + str(amount))
+
+curr = Currency(amount, "USD")
+print("\nTesting mutable type (Currency object)")
+print("Converting USD to JPY:\t"+str(curr.amount))
+print("Converted to JPY:\t\t"+ str(w2.convertCurrency(curr, "JPY").amount))
+print("Original Amount:\t\t" + str(curr.amount))
+
