@@ -17,80 +17,143 @@ public class ConceptsProject {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Wallet wallet = new Wallet();
+        fxnLoop(wallet);
     }
     
-    public class Wallet {
-        private Map<String, Double> currMap;
-        private Map<String, Currency> contents;
-        private Set<String> currNames;
-        
-        public void addNewCurr(String name, double conRate) {
-            if (!currNames.contains(name)) {
-                currMap.put(name, conRate);
-                contents.put(name, new Currency(0, name));
-                currNames.add(name);
-            } else {
-                System.err.println("Error: Currency already in set.");
+    public static void fxnLoop(Wallet wallet) {
+        boolean running = true;
+        while(running) {
+            Scanner userIn = new Scanner(System.in);
+            System.out.println("Select from the following:");
+            System.out.println("1.) View your wallet");
+            System.out.println("2.) Convert currency");
+            System.out.println("3.) Deposit currency");
+            System.out.println("4.) Withdraw currency");
+            System.out.println("5.) Add a new kind of currency");
+            System.out.println("6.) Quit");
+            try {
+                int choice = Integer.parseInt(userIn.nextLine());
+                switch(choice) {
+                    case 1:
+                        wallet.printWallet();
+                        break;
+                    case 2:
+                        convCurrInterface(wallet);
+                        break;
+                    case 3:
+                        depositCurrInterface(wallet);
+                        break;
+                    case 4:
+                        withdrawCurrInterface(wallet);
+                        break;
+                    case 5:
+                        addCurrInterface(wallet);
+                        break;
+                    case 6:
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Number must be between 1 and 6.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number.");
             }
-        }
-        
-        public void printWallet() {
-            String[] currNames = (String[])this.currNames.toArray();
-            for (int i = 0; i < currNames.length; i++) {
-                System.out.println(currNames[i] + ": " + contents.get(currNames[i]).getAmount());
-            }
-        }
-        
-        public double convert(double amount, String typeFrom, String typeTo) {
-            contents.get(typeFrom).subtract(amount);
-            double addTo = amount/currMap.get(typeFrom) * currMap.get(typeTo);
-            contents.get(typeTo).add(addTo);
-            System.out.println("Converted " + amount + " " + typeFrom + " to " + addTo + " " + typeTo + ".");
-            return addTo;
-        }
-        
-        public double convert(double amount, Currency currFrom, Currency currTo) {
-            currFrom.subtract(amount);
-            double addTo = amount/currMap.get(currFrom.getCurrType()) * currMap.get(currTo.getCurrType());
-            currTo.add(addTo);
-            System.out.println("Converted " + amount + " " + currFrom.getCurrType() + " to " + addTo + " " + currTo.getCurrType() + ".");
-            return addTo;
-        }
-        
-        public void deposit(double amount, String curr) {
-            contents.get(curr).add(amount);
-            System.out.println("New " + curr + " balance: " + contents.get(curr).getAmount());
-        }
-        
-        public void withdraw(double amount, String curr) {
-            contents.get(curr).subtract(amount);
-            System.out.println("New " + curr + " balance: " + contents.get(curr).getAmount());
+            
         }
     }
-    
-    public class Currency {
-        private double amount;
-        private String currType;
-        
-        public Currency(double amount, String currType) {
-            this.amount = amount;
-            this.currType = currType;
+
+    private static void convCurrInterface(Wallet wallet) {
+        Scanner userIn = new Scanner(System.in);
+        System.out.println("What kind of currency are you converting from?");
+        String from = userIn.nextLine();
+        System.out.println("How much " + from + " do you want to convert?");
+        boolean valNum = false;
+        double amount = -1;
+        while(!valNum) {
+            try {
+                amount = Double.parseDouble(userIn.nextLine());
+                if (amount <= 0) {
+                    System.out.println("Please enter a valid amount.");
+                } else {
+                    valNum = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid amount.");
+            }
         }
-        
-        public void add(double a) {
-            amount += a;
+        System.out.println("What kind of currency are you converting it to?");
+        String to = userIn.nextLine();
+        System.out.println("Converting " + amount + " " + from + " to " + to + "...");
+        wallet.convert(amount, from, to);
+    }
+
+    private static void depositCurrInterface(Wallet wallet) {
+        Scanner userIn = new Scanner(System.in);
+        System.out.println("What kind of currency are you depositing to?");
+        String kind = userIn.nextLine();
+        System.out.println("How much are you depositing?");
+        boolean valNum = false;
+        double amount = -1;
+        while(!valNum) {
+            try {
+                amount = Double.parseDouble(userIn.nextLine());
+                if (amount <= 0) {
+                    System.out.println("Please enter a valid amount.");
+                } else {
+                    valNum = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid amount.");
+            }
         }
-        
-        public void subtract(double a) {
-            amount -= a;
+        System.out.println("Depositing " + amount + " " + kind + "...");
+        wallet.deposit(amount, kind);
+    }
+
+    private static void withdrawCurrInterface(Wallet wallet) {
+        Scanner userIn = new Scanner(System.in);
+        System.out.println("What kind of currency are you withdrawing from?");
+        String kind = userIn.nextLine();
+        System.out.println("How much are you withdrawing?");
+        boolean valNum = false;
+        double amount = -1;
+        while(!valNum) {
+            try {
+                amount = Double.parseDouble(userIn.nextLine());
+                if (amount <= 0) {
+                    System.out.println("Please enter a valid amount.");
+                } else {
+                    valNum = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid amount.");
+            }
         }
-        
-        public String getCurrType() {
-            return currType;
+        System.out.println("Withdrawing " + amount + " " + kind + "...");
+        wallet.withdraw(amount, kind);
+    }
+
+    private static void addCurrInterface(Wallet wallet) {
+        Scanner userIn = new Scanner(System.in);
+        System.out.println("Enter name of new currency.");
+        String kind = userIn.nextLine();
+        System.out.println("Enter conversion rate of new currency.");
+        boolean valNum = false;
+        double amount = -1;
+        while(!valNum) {
+            try {
+                amount = Double.parseDouble(userIn.nextLine());
+                if (amount <= 0) {
+                    System.out.println("Please enter a valid amount.");
+                } else {
+                    valNum = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid amount.");
+            }
         }
-        
-        public double getAmount() {
-            return amount;
-        }
+        System.out.println("Adding " + kind + " to your wallet ...");
+        wallet.addNewCurr(kind, amount);
     }
 }
