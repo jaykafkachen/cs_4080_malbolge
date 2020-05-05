@@ -25,6 +25,7 @@ public class ConceptsProject {
         boolean running = true;
         while(running) {
             Scanner userIn = new Scanner(System.in);
+            System.out.println("**********************************");
             System.out.println("Select from the following:");
             System.out.println("1.) View your wallet");
             System.out.println("2.) Convert currency");
