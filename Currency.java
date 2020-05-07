@@ -11,11 +11,11 @@ package concepts.project;
  */
 public class Currency {
     private double amount;
-    private String currType;
-
-    public Currency(double amount, String currType) {
+    private double rate;
+    
+    public Currency(double amount, double rate) {
         this.amount = amount;
-        this.currType = currType;
+        this.rate = rate;
     }
 
     public void add(double a) {
@@ -25,12 +25,20 @@ public class Currency {
     public void subtract(double a) {
         amount -= a;
     }
-
-    public String getCurrType() {
-        return currType;
+    
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     public double getAmount() {
         return amount;
+    }
+    
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+    
+    public double getRate() {
+        return rate;
     }
 }

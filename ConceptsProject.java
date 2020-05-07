@@ -16,7 +16,6 @@ public class ConceptsProject {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         Wallet wallet = new Wallet();
         fxnLoop(wallet);
     }
@@ -25,14 +24,15 @@ public class ConceptsProject {
         boolean running = true;
         while(running) {
             Scanner userIn = new Scanner(System.in);
-            System.out.println("**********************************");
+            System.out.println("*******************************");
             System.out.println("Select from the following:");
             System.out.println("1.) View your wallet");
-            System.out.println("2.) Convert currency");
-            System.out.println("3.) Deposit currency");
-            System.out.println("4.) Withdraw currency");
-            System.out.println("5.) Add a new kind of currency");
-            System.out.println("6.) Quit");
+            System.out.println("2.) View exchange rates");
+            System.out.println("3.) Convert currency");
+            System.out.println("4.) Deposit currency");
+            System.out.println("5.) Withdraw currency");
+            System.out.println("6.) Add a new kind of currency or update an existing rate");
+            System.out.println("7.) Quit");
             try {
                 int choice = Integer.parseInt(userIn.nextLine());
                 switch(choice) {
@@ -40,18 +40,21 @@ public class ConceptsProject {
                         wallet.printWallet();
                         break;
                     case 2:
-                        convCurrInterface(wallet);
+                        wallet.printRates();
                         break;
                     case 3:
-                        depositCurrInterface(wallet);
+                        convCurrInterface(wallet);
                         break;
                     case 4:
-                        withdrawCurrInterface(wallet);
+                        depositCurrInterface(wallet);
                         break;
                     case 5:
-                        addCurrInterface(wallet);
+                        withdrawCurrInterface(wallet);
                         break;
                     case 6:
+                        addCurrInterface(wallet);
+                        break;
+                    case 7:
                         running = false;
                         break;
                     default:
@@ -137,9 +140,9 @@ public class ConceptsProject {
 
     private static void addCurrInterface(Wallet wallet) {
         Scanner userIn = new Scanner(System.in);
-        System.out.println("Enter name of new currency.");
+        System.out.println("Enter name of currency.");
         String kind = userIn.nextLine();
-        System.out.println("Enter conversion rate of new currency.");
+        System.out.println("Enter conversion rate of currency.");
         boolean valNum = false;
         double amount = -1;
         while(!valNum) {
@@ -154,7 +157,7 @@ public class ConceptsProject {
                 System.out.println("Please enter a valid amount.");
             }
         }
-        System.out.println("Adding " + kind + " to your wallet ...");
-        wallet.addNewCurr(kind, amount);
+        System.out.println("Adding/updating " + kind + "...");
+        wallet.addUpdateCurr(kind, amount);
     }
 }

@@ -12,54 +12,47 @@ import java.util.*;
  * @author Euclid
  */
 public class Wallet {
-    private Map<String, Double> currMap;
     private Map<String, Currency> contents;
     private Set<String> currNames;
 
     Wallet() {
-        currMap = new HashMap<>();
         contents = new HashMap<>();
         currNames = new HashSet<>();
-        addNewCurr("USD", 1);
-        addNewCurr("EUR", 0.919243);
-        addNewCurr("GBP", 0.801796);
-        addNewCurr("CNY", 7.0625);
-        addNewCurr("JPY", 106.5875);
-        addNewCurr("CAD", 1.40359);
-        addNewCurr("AUD", 1.546716);
+        addUpdateCurr("USD", 1);
+        addUpdateCurr("EUR", 0.919243);
+        addUpdateCurr("GBP", 0.801796);
+        addUpdateCurr("CNY", 7.0625);
+        addUpdateCurr("JPY", 106.5875);
+        addUpdateCurr("CAD", 1.40359);
+        addUpdateCurr("AUD", 1.546716);
     }
 
-    public void addNewCurr(String name, double conRate) {
-        if (!currNames.contains(name)) {
-            currMap.put(name, conRate);
-            contents.put(name, new Currency(0, name));
-            currNames.add(name);
-        } else {
-            System.err.println("Error: Currency already in set.");
-        }
+    public void addUpdateCurr(String name, double conRate) {
+        contents.put(name, new Currency(0, conRate));
+        currNames.add(name);
     }
 
     public void printWallet() {
         String[] currNames = Arrays.copyOf(this.currNames.toArray(), this.currNames.toArray().length, String[].class);
-//        String[] currNames = (String[])this.currNames.toArray();
         for (int i = 0; i < currNames.length; i++) {
             System.out.println(currNames[i] + ": " + contents.get(currNames[i]).getAmount());
         }
     }
-
-    public double convert(double amount, String typeFrom, String typeTo) {
-        contents.get(typeFrom).subtract(amount);
-        double addTo = amount/currMap.get(typeFrom) * currMap.get(typeTo);
-        contents.get(typeTo).add(addTo);
-        System.out.println("Converted " + amount + " " + typeFrom + " to " + addTo + " " + typeTo + ".");
-        return addTo;
+    
+    public void printRates() {
+        String[] currNames = Arrays.copyOf(this.currNames.toArray(), this.currNames.toArray().length, String[].class);
+        for (int i = 0; i < currNames.length; i++) {
+            System.out.println(currNames[i] + ": " + contents.get(currNames[i]).getRate());
+        }
     }
 
-    public double convert(double amount, Currency currFrom, Currency currTo) {
-        currFrom.subtract(amount);
-        double addTo = amount/currMap.get(currFrom.getCurrType()) * currMap.get(currTo.getCurrType());
-        currTo.add(addTo);
-        System.out.println("Converted " + amount + " " + currFrom.getCurrType() + " to " + addTo + " " + currTo.getCurrType() + ".");
+    public double convert(double amount, String typeFrom, String typeTo) {
+        Currency from = contents.get(typeFrom);
+        Currency to = contents.get(typeTo);
+        from.subtract(amount);
+        double addTo = amount/from.getRate() * to.getRate();
+        to.add(addTo);
+        System.out.println("Converted " + amount + " " + typeFrom + " to " + addTo + " " + typeTo + ".");
         return addTo;
     }
 
