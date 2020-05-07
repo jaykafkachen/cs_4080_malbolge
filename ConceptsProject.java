@@ -158,6 +158,6 @@ public class ConceptsProject {
             }
         }
         System.out.println("Adding/updating " + kind + "...");
-        wallet.addUpdateCurr(kind, amount);
+        wallet.addUpdateCurr(kind, 0, amount);
     }
 }

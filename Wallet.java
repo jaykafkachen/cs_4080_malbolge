@@ -18,18 +18,22 @@ public class Wallet {
     Wallet() {
         contents = new HashMap<>();
         currNames = new HashSet<>();
-        addUpdateCurr("USD", 1);
-        addUpdateCurr("EUR", 0.919243);
-        addUpdateCurr("GBP", 0.801796);
-        addUpdateCurr("CNY", 7.0625);
-        addUpdateCurr("JPY", 106.5875);
-        addUpdateCurr("CAD", 1.40359);
-        addUpdateCurr("AUD", 1.546716);
+        addUpdateCurr("USD", 0, 1);
+        addUpdateCurr("EUR", 0, 0.919243);
+        addUpdateCurr("GBP", 0, 0.801796);
+        addUpdateCurr("CNY", 0, 7.0625);
+        addUpdateCurr("JPY", 0, 106.5875);
+        addUpdateCurr("CAD", 0, 1.40359);
+        addUpdateCurr("AUD", 0, 1.546716);
     }
 
-    public void addUpdateCurr(String name, double conRate) {
-        contents.put(name, new Currency(0, conRate));
-        currNames.add(name);
+    public void addUpdateCurr(String name, double amount, double conRate) {
+        if (currNames.contains(name)) {
+            amount = contents.get(name).getAmount();
+        } else {
+            currNames.add(name);
+        }
+        contents.put(name, new Currency(amount, conRate));
     }
 
     public void printWallet() {
